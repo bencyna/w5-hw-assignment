@@ -9,6 +9,8 @@ $(document).ready(function () {
   var taskEight = $("#fourPm");
   var taskNine = $("#fivePm");
 
+  var saveBtn = document.querySelectorAll(".saveBtn");
+
   var tasksLocation = [
     taskOne,
     taskTwo,
@@ -21,39 +23,36 @@ $(document).ready(function () {
     taskNine,
   ];
 
-  var taskOneInput = "";
-  var taskTwoInput = "";
-  var taskThreeInput = "";
-  var taskFourInput = "";
-  var taskFiveInput = "";
-  var taskSixInput = "";
-  var taskSevenInput = "";
-  var taskEightInput = "";
-  var taskNineInput = "";
+//   var taskOneInput = "";
+//   var taskTwoInput = "";
+//   var taskThreeInput = "";
+//   var taskFourInput = "";
+//   var taskFiveInput = "";
+//   var taskSixInput = "";
+//   var taskSevenInput = "";
+//   var taskEightInput = "";
+//   var taskNineInput = "";
 
-  var tasksInput = [
-    taskOneInput,
-    taskTwoInput,
-    taskThreeInput,
-    taskFourInput,
-    taskFiveInput,
-    taskSixInput,
-    taskSevenInput,
-    taskEightInput,
-    taskNineInput,
-  ];
+//   var tasksInput = [
+//     taskOneInput,
+//     taskTwoInput,
+//     taskThreeInput,
+//     taskFourInput,
+//     taskFiveInput,
+//     taskSixInput,
+//     taskSevenInput,
+//     taskEightInput,
+//     taskNineInput,
+//   ];
 
   $("#currentDay").append(moment().format("MMM Do YY"));
 
-  console.log(tasksInput);
   getItems();
   time();
 
   function renderTasks() {
-    console.log(tasksInput);
     for (var i = 0; i < 9; i++) {
       tasksLocation[i].append(storedTaskInput[i]);
-      console.log(storedTaskInput[i])
     }
   }
 
@@ -62,45 +61,50 @@ $(document).ready(function () {
     storedTaskInput = storedTasks;
     renderTasks();
   }
-  console.log(tasksLocation);
   function storeInputs() {
     localStorage.setItem("storedTaskInput", JSON.stringify(storedTaskInput));
   }
   var storedTaskInput = [];
 
-  $(".saveBtn").click(function (event) {
+  function userInput(event) {
     event.preventDefault();
     for (var i = 0; i < 9; i++) {
       var task = tasksLocation[i];
       var taskContent = task.val();
       storedTaskInput.splice(8, 8, taskContent);
       console.log(storedTaskInput);
+      console.log(task.val());
     }
     storeInputs();
     renderTasks();
-  });
+  }
 
   function time() {
-    var format = "hh:mm:ss";
+    for (var j = 9; j < tasksLocation.length + 9; j++) {
+      var format = "hh:mm:ss";
+      (beforeTime = moment(j + ":00:00", format)),
+        (afterTime = moment(j + 1 + ":00:00", format));
 
-    (beforeTime = moment("23:00:00", format)),
-      (afterTime = moment("23:00:01", format));
-
-    if (moment().isAfter(afterTime)) {
-      taskOne.addClass("past");
-      taskOne.removeClass("present");
-      taskOne.removeClass("future");
-
+      if (moment().isAfter(afterTime)) {
+        tasksLocation[j - 9].addClass("past");
+        tasksLocation[j - 9].removeClass("present");
+        tasksLocation[j - 9].removeClass("future");
+      }
       if (moment().isBefore(beforeTime)) {
-        taskOne.addClass("future");
-        taskOne.removeClass("present");
-        taskOne.removeClass("past");
+        tasksLocation[j - 9].addClass("future");
+        tasksLocation[j - 9].removeClass("present");
+        tasksLocation[j - 9].removeClass("past");
+      }
+      if (moment().isBetween(beforeTime, afterTime)) {
+        tasksLocation[j - 9].addClass("present");
+        tasksLocation[j - 9].removeClass("future");
+        tasksLocation[j - 9].removeClass("past");
       }
     }
-    if (moment().isBetween()) {
-      taskOne.addClass("present");
-      taskOne.removeClass("future");
-      taskOne.removeClass("past");
-    }
+
+    saveBtn.forEach(function (saveBtn) {
+      saveBtn.addEventListener("click", userInput);
+    });
   }
 });
+
