@@ -9,6 +9,28 @@ $(document).ready(function () {
   var taskEight = $("#fourPm");
   var taskNine = $("#fivePm");
 
+  var btnOne = $("#btnOne");
+  var btnTwo = $("#btnTwo");
+  var btnThree = $("#btnThree");
+  var btnFour = $("#btnFour");
+  var btnFive = $("#btnFive");
+  var btnSix = $("#btnSix");
+  var btnSeven = $("#btnSeven");
+  var btnEight = $("#btnEight");
+  var btnNine = $("#btnNine");
+
+  var buttons = [
+    btnOne,
+    btnTwo,
+    btnThree,
+    btnFour,
+    btnFive,
+    btnSix,
+    btnSeven,
+    btnEight,
+    btnNine,
+  ];
+
   var saveBtn = document.querySelectorAll(".saveBtn");
 
   var tasksLocation = [
@@ -23,28 +45,6 @@ $(document).ready(function () {
     taskNine,
   ];
 
-//   var taskOneInput = "";
-//   var taskTwoInput = "";
-//   var taskThreeInput = "";
-//   var taskFourInput = "";
-//   var taskFiveInput = "";
-//   var taskSixInput = "";
-//   var taskSevenInput = "";
-//   var taskEightInput = "";
-//   var taskNineInput = "";
-
-//   var tasksInput = [
-//     taskOneInput,
-//     taskTwoInput,
-//     taskThreeInput,
-//     taskFourInput,
-//     taskFiveInput,
-//     taskSixInput,
-//     taskSevenInput,
-//     taskEightInput,
-//     taskNineInput,
-//   ];
-
   $("#currentDay").append(moment().format("MMM Do YY"));
 
   getItems();
@@ -52,7 +52,7 @@ $(document).ready(function () {
 
   function renderTasks() {
     for (var i = 0; i < 9; i++) {
-      tasksLocation[i].append(storedTaskInput[i]);
+      tasksLocation[i].val(tasksLocation[i].val() + storedTaskInput[i]);
     }
   }
 
@@ -72,39 +72,34 @@ $(document).ready(function () {
       var task = tasksLocation[i];
       var taskContent = task.val();
       storedTaskInput.splice(8, 8, taskContent);
-      console.log(storedTaskInput);
-      console.log(task.val());
     }
     storeInputs();
-    renderTasks();
   }
 
   function time() {
-    for (var j = 9; j < tasksLocation.length + 9; j++) {
+    for (var j = 0; j < tasksLocation.length; j++) {
       var format = "hh:mm:ss";
-      (beforeTime = moment(j + ":00:00", format)),
-        (afterTime = moment(j + 1 + ":00:00", format));
+      (beforeTime = moment(j + 9 + ":00:00", format)),
+        (afterTime = moment(j + 10 + ":00:00", format));
 
       if (moment().isAfter(afterTime)) {
-        tasksLocation[j - 9].addClass("past");
-        tasksLocation[j - 9].removeClass("present");
-        tasksLocation[j - 9].removeClass("future");
+        tasksLocation[j].addClass("past");
+        tasksLocation[j].removeClass("present");
+        tasksLocation[j].removeClass("future");
       }
       if (moment().isBefore(beforeTime)) {
-        tasksLocation[j - 9].addClass("future");
-        tasksLocation[j - 9].removeClass("present");
-        tasksLocation[j - 9].removeClass("past");
+        tasksLocation[j].addClass("future");
+        tasksLocation[j].removeClass("present");
+        tasksLocation[j].removeClass("past");
       }
       if (moment().isBetween(beforeTime, afterTime)) {
-        tasksLocation[j - 9].addClass("present");
-        tasksLocation[j - 9].removeClass("future");
-        tasksLocation[j - 9].removeClass("past");
+        tasksLocation[j].addClass("present");
+        tasksLocation[j].removeClass("future");
+        tasksLocation[j].removeClass("past");
       }
     }
-
-    saveBtn.forEach(function (saveBtn) {
-      saveBtn.addEventListener("click", userInput);
-    });
   }
+  saveBtn.forEach(function (saveBtn) {
+    saveBtn.addEventListener("click", userInput);
+  });
 });
-
