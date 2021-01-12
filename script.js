@@ -9,28 +9,6 @@ $(document).ready(function () {
   var taskEight = $("#fourPm");
   var taskNine = $("#fivePm");
 
-  var btnOne = $("#btnOne");
-  var btnTwo = $("#btnTwo");
-  var btnThree = $("#btnThree");
-  var btnFour = $("#btnFour");
-  var btnFive = $("#btnFive");
-  var btnSix = $("#btnSix");
-  var btnSeven = $("#btnSeven");
-  var btnEight = $("#btnEight");
-  var btnNine = $("#btnNine");
-
-  var buttons = [
-    btnOne,
-    btnTwo,
-    btnThree,
-    btnFour,
-    btnFive,
-    btnSix,
-    btnSeven,
-    btnEight,
-    btnNine,
-  ];
-
   var saveBtn = document.querySelectorAll(".saveBtn");
 
   var tasksLocation = [
@@ -44,18 +22,26 @@ $(document).ready(function () {
     taskEight,
     taskNine,
   ];
-
+// append current day to web page
   $("#currentDay").append(moment().format("MMM Do YY"));
 
   getItems();
   time();
 
+  // getting each task user has inputed from the stored version
+  // adding it the the same input area as it was inputted by user 
   function renderTasks() {
+    if (storedTaskInput === null){
+      return;
+    }
     for (var i = 0; i < 9; i++) {
-      tasksLocation[i].val(tasksLocation[i].val() + storedTaskInput[i]);
+      console.log(storedTaskInput)
+      var taskOrigin = tasksLocation[i];
+      var storedTask = storedTaskInput[i];
+      taskOrigin.val(taskOrigin.val() + storedTask);  
     }
   }
-
+// getting stored items in local storage and executing renderTasks() 
   function getItems() {
     var storedTasks = JSON.parse(localStorage.getItem("storedTaskInput"));
     storedTaskInput = storedTasks;
@@ -64,8 +50,9 @@ $(document).ready(function () {
   function storeInputs() {
     localStorage.setItem("storedTaskInput", JSON.stringify(storedTaskInput));
   }
+  // empty array for tasks to be added to, will ultimatley be stored and displayed
   var storedTaskInput = [];
-
+// function to add input to the storedTaskInput array
   function userInput(event) {
     event.preventDefault();
     for (var i = 0; i < 9; i++) {
@@ -73,14 +60,16 @@ $(document).ready(function () {
       var taskContent = task.val();
       storedTaskInput.splice(8, 8, taskContent);
     }
+    // call function to save to local storage
     storeInputs();
   }
 
+  // adds and removes past, present and future tag based on current time
   function time() {
     for (var j = 0; j < tasksLocation.length; j++) {
       var format = "hh:mm:ss";
-      (beforeTime = moment(j + 9 + ":00:00", format)),
-        (afterTime = moment(j + 10 + ":00:00", format));
+      (beforeTime = moment(j + 9 + ":00:00", format)), // starts at 9am and adds new hour each time it runs for loop
+        (afterTime = moment(j + 10 + ":00:00", format)); // ends at 6pm
 
       if (moment().isAfter(afterTime)) {
         tasksLocation[j].addClass("past");
@@ -99,6 +88,8 @@ $(document).ready(function () {
       }
     }
   }
+  // when button is clicked, executes userInputs()
+  // Localstorage is executed onclick as well
   saveBtn.forEach(function (saveBtn) {
     saveBtn.addEventListener("click", userInput);
   });
