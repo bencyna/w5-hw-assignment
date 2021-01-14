@@ -32,10 +32,9 @@ $(document).ready(function () {
   // adding it the the same input area as it was inputted by user 
   function renderTasks() {
     if (storedTaskInput === null){
-      return;
+      return; 
     }
     for (var i = 0; i < 9; i++) {
-      console.log(storedTaskInput)
       var taskOrigin = tasksLocation[i];
       var storedTask = storedTaskInput[i];
       taskOrigin.val(taskOrigin.val() + storedTask);  
